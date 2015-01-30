@@ -59,18 +59,24 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Github</th>
+                {% if attendees.attendees and attendees.attendees[0]['answers'] is not none %}
+                    {% for answer in attendees.attendees[0]['answers'] %}
+                        <th>{{ answer['question'] }}</th>
+                    {% endfor %}
+                {% endif %}
             </tr>
             </thead>
             <tbody>
             {% for attendee in attendees.attendees -%}
                 <tr>
                     <td>{{ attendee.profile.name }}</td>
-                    <td>
-                        <a href="https://github.com/{{ attendee['answers'][0]['answer'] }}">
-                            @{{ attendee['answers'][0]['answer'] }}
-                        </a>
-                    </td>
+                    {% if attendees.attendees and attendees.attendees[0]['answers'] is not none %}
+                        {% for answer in attendee['answers'] %}
+                            <td>
+                                {{ answer['answer'] }}
+                            </td>
+                        {% endfor %}
+                    {% endif %}
                 </tr>
             {%- endfor %}
             </tbody>
