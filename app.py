@@ -20,6 +20,7 @@ eventbrite = eventbrite.Eventbrite(EVENTBRITE_OAUTH_TOKEN)
 p = pusher.Pusher(app_id=PUSHER_APP_ID, key=PUSHER_KEY, secret=PUSHER_SECRET)
 
 app = Flask(__name__)
+app.debug = True
 
 @app.route('/')
 def index():
@@ -30,6 +31,9 @@ def index():
 
     # Get the attendee list
     attendees = eventbrite.get_event_attendees(EVENTBRITE_EVENT_ID)
+
+    # Reverse so latest to sign up is at the top
+    attendees['attendees'].reverse()
 
     # Render our HTML.
     return render_template(
