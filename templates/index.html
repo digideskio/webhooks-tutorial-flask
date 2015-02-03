@@ -17,19 +17,26 @@
         $( function() {
             var pusher = new Pusher('{{ settings.PUSHER_KEY }}');
             var channel = pusher.subscribe('webhooks');
+            updater = function(user){
+                var msg = '<tr><td>'+user.name +'</td>';
+                {% if attendees.attendees and attendees.attendees[0]['answers'] is not none %}
+                    {% for answer in attendee['answers'] %}
+                        msg = msg + '<td></td>';
+                    {% endfor %}
+                {% endif %}
+                msg = msg + '</tr>';
+                $("tbody").prepend(msg);
+            };
             channel.bind('Attendee', function(data) {
-              // alert('An event was triggered with message: ' + data.message);
               $("#pusherAttendee").append(
                     "<li>" + data.name + "</li>"
                 );
             });
             channel.bind('User', function(user) {
-              // alert('An event was triggered with message: ' + data.message);
-              $("tbody").prepend('<tr><td>'+user.name +'</td><td>n/a</td></tr>');
+                updater(user);
             });
             channel.bind('Attendee', function(user) {
-              // alert('An event was triggered with message: ' + data.message);
-              $("tbody").prepend('<tr><td>'+user.name +'</td><td>n/a</td></tr>');
+                updater(user);
             });
         });
     </script>
